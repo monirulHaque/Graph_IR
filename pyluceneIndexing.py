@@ -10,6 +10,8 @@ import org.apache.lucene.document as document
 from org.apache.lucene.store import SimpleFSDirectory, FSDirectory
 # from org.apache.lucene.search import IndexSearcher, BM25Similarity
 
+import pandas as pd
+
 indexPath = File("index/").toPath()
 indexDir = FSDirectory.open(indexPath)
 analyzer = StandardAnalyzer()
@@ -17,9 +19,18 @@ config = IndexWriterConfig(analyzer)
 config.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 writer = IndexWriter(indexDir, config)
 
-import pandas as pd
 
-# load dataset
-df = pd.read_csv('WAPO_2018_news_10000.csv', low_memory=False)
-print(df.head(10))
-print(df.info())
+def indexSingleNews(title, body):
+    doc = document.Document()
+    doc.add(TextField("title", title, Field.Store.YES))
+    doc.add(TextField("body", body, Field.Store.YES))
+    writer.addDocument(doc)
+    
+def makeInvertedIndex(file_path):
+    df = pd.read_csv(file_path, low_memory=False)
+    for i, row in df.iterrows():
+        indexSingleNews(row['title'], row['body'])
+    writer.commit()
+    writer.close()
+
+makeInvertedIndex('WAPO_2018_news_10000.csv')
