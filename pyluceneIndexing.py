@@ -7,7 +7,7 @@ from org.apache.lucene.document import Document, Field, FieldType, TextField, St
 from org.apache.lucene.index import IndexOptions, IndexWriter, IndexWriterConfig, DirectoryReader
 from java.io import File
 import org.apache.lucene.document as document
-from org.apache.lucene.store import SimpleFSDirectory, FSDirectory
+from org.apache.lucene.store import  FSDirectory, NIOFSDirectory
 # from org.apache.lucene.search import IndexSearcher, BM25Similarity
 
 import pandas as pd
@@ -33,4 +33,4 @@ def makeInvertedIndex(file_path):
     writer.commit()
     writer.close()
 
-makeInvertedIndex('WAPO_2018_news_10000.csv')
+makeInvertedIndex('WAPO_2018_docs.csv')
