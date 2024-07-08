@@ -2,7 +2,8 @@
 import lucene
 print(lucene.initVM(vmargs=['-Djava.awt.headless=true']))
 from java.nio.file import Paths
-from org.apache.lucene.analysis.standard import StandardAnalyzer
+# from org.apache.lucene.analysis.standard import StandardAnalyzer
+from org.apache.lucene.analysis.en import EnglishAnalyzer
 from org.apache.lucene.document import Document, Field, FieldType, TextField, StringField
 from org.apache.lucene.index import IndexOptions, IndexWriter, IndexWriterConfig, DirectoryReader
 from java.io import File
@@ -14,7 +15,7 @@ import pandas as pd
 
 indexPath = File("index/").toPath()
 indexDir = FSDirectory.open(indexPath)
-analyzer = StandardAnalyzer()
+analyzer = EnglishAnalyzer()
 config = IndexWriterConfig(analyzer)
 config.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 writer = IndexWriter(indexDir, config)
