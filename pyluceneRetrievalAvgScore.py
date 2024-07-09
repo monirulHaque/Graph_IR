@@ -15,7 +15,7 @@ import pandas as pd
 
 
 def BM25Search(index_path, q, annotated_docs, k1=1.2, b=0.75, search_field="body"):
-    top_search_size = 50
+    top_search_size = 10
     print("Query Search:", q)
     analyzer = EnglishAnalyzer()
     directory = FSDirectory.open(File(index_path).toPath())
@@ -63,4 +63,4 @@ for index, row in dfq.iterrows():
 
 
 dfr = pd.DataFrame(results)
-dfr.to_csv('results.csv')
+dfr.to_csv('Avgresults10.csv')
