@@ -21,17 +21,18 @@ config.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 writer = IndexWriter(indexDir, config)
 
 
-def indexSingleNews(title, body):
+def indexSingleNews(title, body, doc_id):
     doc = document.Document()
-    doc.add(TextField("title", title, Field.Store.YES))
-    doc.add(TextField("body", body, Field.Store.YES))
+    doc.add(document.Field("doc_id", doc_id, TextField.TYPE_STORED))
+    doc.add(document.Field("title", title, TextField.TYPE_STORED))
+    doc.add(document.Field("body", body, TextField.TYPE_STORED))
     writer.addDocument(doc)
     
 def makeInvertedIndex(file_path):
     df = pd.read_csv(file_path, low_memory=False)
     for i, row in df.iterrows():
-        indexSingleNews(row['title'], row['body'])
+        indexSingleNews(row['title'], row['body'], row["doc_id"])
     writer.commit()
-    writer.close()
+
 
 makeInvertedIndex('WAPO_2018_docs.csv')

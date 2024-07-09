@@ -1,2 +1,8 @@
 WAPO_2018_news_10000.csv
 WAPO_2018_docs.csv
+WAPO_2018_core_qrels.csv
+WAPO_2018_core_queries.csv
+WAPO_2018_news_qrels.csv
+WAPO_2018_news_queries.csv
+index\
+index/
