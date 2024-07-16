@@ -25,27 +25,41 @@ def BM25Search(index_path, q, annotated_docs, k1=1.2, b=0.75, search_field="body
     print("Total number of matching Documents:", len(scoreDocs))
     news = set() # costly
     no_of_rel_docs_retrieved = 0
+    i = 0
+    total_relavant_docs = len(annotated_docs)
+    precisionList = []
     for scoreDoc in scoreDocs:
+        i += 1
         doc = searcher.doc(scoreDoc.doc)
         # print(doc.get("doc_id"), doc.get("title"), scoreDoc.score)
-        if scoreDoc.score < 4:
-            break
+        # if scoreDoc.score < 4:
+        #     break
         if doc.get("doc_id") in annotated_docs:
             no_of_rel_docs_retrieved += 1
+            precisionList.append(no_of_rel_docs_retrieved/i)
         news.add(doc.get("title"))
     print("--------------------------------------------------------")
     print(len(news))
     print("--------------------------------------------------------")
     no_of_total_docs_retrieved = len(news)
-    try:
-        precision = no_of_rel_docs_retrieved / no_of_total_docs_retrieved
-    except:
-        precision = 0
-    try:
-        recall = no_of_rel_docs_retrieved / len(annotated_docs)
-    except:
-        recall = 0
-    return precision, recall
+    # Precision at 50
+    # try:
+    #     precision = no_of_rel_docs_retrieved / no_of_total_docs_retrieved
+    # except:
+    #     precision = 0
+    # try:
+    #     recall = no_of_rel_docs_retrieved / total_relavant_docs
+    # except:
+    #     recall = 0
+
+    # Non-interpolated Average Precision
+    # avgPrec = sum(list(filter(lambda x: (x), precisionList)))/total_relavant_docs
+    total = 0
+    for p in precisionList:
+        total += p
+    avgPrec = total / total_relavant_docs
+
+    return avgPrec
 
 
 dfq = pd.read_csv("WAPO_2018_core_queries.csv")
@@ -57,8 +71,9 @@ results = {}
 for index, row in dfq.iterrows():
     ls = dfqrel[dfqrel['query_id'] == row["query_id"]]["doc_id"].tolist()
     print(len(ls))
-    precision, recall = BM25Search("index/", row['title'], ls)
-    results[row["query_id"]] = {"precision":precision, "recall":recall}
+    avgPrec = BM25Search("index/", row['title'], ls)
+    # results[row["query_id"]] = {"precision":precision, "recall":recall}
+    results[row["query_id"]] = {"avgPrecision": avgPrec}
 
 
 dfr = pd.DataFrame(results)
