@@ -75,6 +75,11 @@ for index, row in dfq.iterrows():
     # results[row["query_id"]] = {"precision":precision, "recall":recall}
     results[row["query_id"]] = {"avgPrecision": avgPrec}
 
+meanAvgPrec = 0
 
+for key in results:
+    meanAvgPrec += results[key]['avgPrecision']
+results["Mean Avg Precision"] = meanAvgPrec/len(results)
 dfr = pd.DataFrame(results)
-dfr.to_csv('results.csv')
+dfr = dfr.T
+dfr.to_csv('resultsmap.csv')
