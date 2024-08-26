@@ -33,7 +33,7 @@ def BM25Search(index_path, q, matched_qrels, k1=1.2, b=0.75, search_field="body"
     precisionList = []
     cumulative_gain = 0
     discounted_cumulative_gain = {}
-    k = 10
+    k = 5
     q = 0
     for scoreDoc in scoreDocs:
         i += 1
@@ -63,7 +63,7 @@ def BM25Search(index_path, q, matched_qrels, k1=1.2, b=0.75, search_field="body"
         if i == k:
             break
     normalized_discounted_cumulative_gain = discounted_cumulative_gain[k-1]/ideal_cumulative_gain[k-1]
-    return 
+    return normalized_discounted_cumulative_gain
 
 
 dfq = pd.read_csv("WAPO_2018_core_queries.csv")
