@@ -60,7 +60,7 @@ def BM25Search(index_path, q, matched_qrels, k1=1.2, b=0.75, search_field="body"
             ideal_cumulative_gain[i-1] = ideal_cumulative_gain[i-2] + row["relevance"]/math.log(i-1, 2)
         if i == k:
             break
-    normalized_discounted_cumulative_gain = 
+    normalized_discounted_cumulative_gain = discounted_cumulative_gain[k-1]/ideal_cumulative_gain[k-1]
     return 
 
 
