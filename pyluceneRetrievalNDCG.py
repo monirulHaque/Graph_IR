@@ -44,7 +44,7 @@ def BM25Search(index_path, q, matched_qrels, k1=1.2, b=0.75, search_field="body"
         if i < 3:
             discounted_cumulative_gain[i-1] = cumulative_gain
         else:
-            discounted_cumulative_gain[i-1] = discounted_cumulative_gain[i-2] + dfqrel[doc.get("doc_id")]/math.log(i-1, 2)
+            discounted_cumulative_gain[i-1] = discounted_cumulative_gain[i-2] + matched_qrels.loc[matched_qrels["doc_id"] == doc.get("doc_id")]["relevance"].to_numpy()[0]/math.log(i-1, 2)
         news.add(doc.get("title"))
         if i == k:
             break
