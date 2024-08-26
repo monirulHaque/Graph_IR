@@ -72,18 +72,16 @@ print(dfqrel)
 results = {}
 
 for index, row in dfq.iterrows():
-
     # ls = dfqrel[dfqrel['query_id'] == row["query_id"]]["doc_id"].tolist()
     ls = dfqrel[dfqrel['query_id'] == row["query_id"]]
-    print(ls)
-    break
-    avgPrec = BM25Search("index/", row['title'], ls)
+    ndcg = BM25Search("index/", row['title'], ls)
+    results[row["query_id"]] = {"ndcg":ndcg}
 
-# meanAvgPrec = 0
+avgNDCG = 0
 
-# for key in results:
-#     meanAvgPrec += results[key]['avgPrecision']
-# results["Mean Avg Precision"] = meanAvgPrec/len(results)
-# dfr = pd.DataFrame(results)
-# dfr = dfr.T
-# dfr.to_csv('resultsmap.cs
+for key in results:
+    avgNDCG += results[key]['ndcg']
+results["Average NDCG"] = avgNDCG/len(results)
+dfr = pd.DataFrame(results)
+dfr = dfr.T
+dfr.to_csv('resultsNDCG.csv')
